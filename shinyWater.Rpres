@@ -1,0 +1,53 @@
+USGS Surface Water Stations
+========================================================
+author: James Cichon
+date: July 5, 2017
+autosize: true
+
+WaterXplorer Design
+========================================================
+
+- Shiny web application
+- Direct connection to USGS NWIS database
+- Leaflet map to show locations
+- Functions to query NWIS database
+- Dygraph to plot output
+
+How to use the Apllication
+========================================================
+
+The application shows the location of surface water stations in Florida.  Depending on the date range and parameter settings you may get more or less station locations.
+
+- Select the date range to obtain data
+- Select which parameter of data you would like to see (River discharge in cubic feet per second or gage height of river in feet)
+- Zoom in/out and select a station by clicking on a red point
+- A plot of the data will appear on the bottom of the page.  You can use the slider at the bottom of the plot to further examine the data.
+
+Application code
+========================================================
+
+The user Interface code (ui.R) has a menu bar called Surface Stations.  This is not needed in this application but an additional tab for Groundwater Stations will be added in the future.
+
+In addition, it has a leaflet map to veiw spatial data and two selection boxes as input.
+
+The server code (server.R) connects to the USGS NWIS database, queries the data, and plots the data based on user input.
+
+The code and shiny application can be found at the following links:
+
+GitHub code:
+https://github.com/jcichon/shinyWater
+
+Shiny application:
+https://jcichon.shinyapps.io/shinywater/
+
+Example Plot of USGS Discharge Data
+========================================================
+```{r, echo=TRUE, width = 100, fig.width=20, fig.height=7.5}
+library(dataRetrieval)
+library(dygraphs)
+library(magrittr)
+usgsDaily <- readNWISdv("02320000", "00060", startDate = "2012-09-17", endDate = "2017-06-30")
+dygraphData <- usgsDaily[,4]
+names(dygraphData) <- usgsDaily$Date
+dygraph(dygraphData) %>% dyRangeSelector()
+```
